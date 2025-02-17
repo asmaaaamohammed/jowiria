@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>checkout</title>
+    <style>
+        /* التصميم العام */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F8E7F6;
+            color: #4B164C;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+        }
+
+        .checkout-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #4B164C;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid transparent;
+            border-radius: 25px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+            color: #4B164C;
+            outline: none;
+            transition: all 0.3s ease-in-out;
+            text-align: center;
+        }
+
+        .input-group select {
+            appearance: none;
+            background: linear-gradient(90deg, #4B164C, #DD88CF);
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .payment-options {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .payment-options label {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .payment-options input[type="radio"] {
+            width: 24px;
+            height: 24px;
+            accent-color: #4B164C;
+        }
+
+        .product-details {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 15px;
+            border-radius: 15px;
+            color: #4B164C;
+            font-size: 18px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .product-details img {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .product-info {
+            flex: 1;
+            text-align: left;
+        }
+
+        .order-summary {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 15px;
+            border-radius: 15px;
+            color: #4B164C;
+            font-size: 18px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .order-summary p {
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .total-price {
+            font-size: 22px;
+            font-weight: bold;
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(45deg, #4B164C, #DD88CF);
+            color: white;
+            border-radius: 25px;
+            margin-top: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(90deg, #4B164C, #DD88CF);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        /* تعديلات على القائمة المنسدلة للمحافظات */
+        .shipping-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .shipping-container label {
+            display: block;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #4B164C;
+        }
+
+        .shipping-container select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid transparent;
+            border-radius: 25px;
+            font-size: 16px;
+            background: linear-gradient(90deg, #4B164C, #DD88CF);
+            color: rgb(0, 0, 0);
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+            transition: all 0.3s ease-in-out;
+            text-align: center;
+        }
+
+        .shipping-container select:hover {
+            background: linear-gradient(90deg, #DD88CF, #4B164C);
+        }
+
+        .shipping-container::after {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 14px;
+            pointer-events: none;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        (function() {
+            emailjs.init("TORUhwPNsi5IrClRF"); 
+        })();
+    </script>
+</head>
+<body>
+    <div class="checkout-container">
+        <!-- قسم تفاصيل المنتج -->
+        <div class="left-section">
+            <h1>Order details</h1>
+            <div id="checkout-items">
+                
+            </div>
+        </div>
+
+        
+        <div class="right-section">
+            <h1>checkout</h1>
+            <div class="input-group">
+                <input type="text" id="name" placeholder="your name">
+            </div>
+
+            <div class="input-group">
+                <input type="email" id="email" placeholder="your email">
+            </div>
+
+            <div class="input-group">
+                <input type="tel" id="phone" placeholder="Your phone number">
+            </div>
+
+            <div class="input-group">
+                <input type="tel" id="alt-phone" placeholder="Alternative phone number">
+            </div>
+
+            <div class="shipping-container">
+                <label for="governorate">governorate</label>
+                <select id="governorate">
+                    <option value="القاهرة">القاهرة</option>
+                    <option value="الجيزة">الجيزة</option>
+                    <option value="المرج">المرج</option>
+<option value="الخانكة">الخانكة</option>
+<option value="الخصوص">الخصوص</option>
+<option value="بدريس">بدريس</option>
+<option value="أكتوبر">أكتوبر</option>
+<option value="التجمع">التجمع</option>
+<option value="طامية">طامية</option>
+<option value="المقطم">المقطم</option>
+<option value="حلوان">حلوان</option>
+<option value="حدائق الأهرام">حدائق الأهرام</option>
+<option value="السلام">السلام</option>
+<option value="الشيخ زايد">الشيخ زايد</option>
+<option value="الحوامدية">الحوامدية</option>
+<option value="الرحاب">الرحاب</option>
+<option value="أبو زعبل">أبو زعبل</option>
+<option value="هنشور">هنشور</option>
+<option value="بسيون">بسيون</option>
+<option value="طما">طما</option>
+<option value="المنصورية">المنصورية</option>
+<option value="كرداسة">كرداسة</option>
+<option value="الزراعل">الزراعل</option>
+<option value="أنوراسي">أنوراسي</option>
+<option value="مساء الفطار">مساء الفطار</option>
+<option value="المينب">المينب</option>
+<option value="أبو النمرس">أبو النمرس</option>
+<option value="شرامانت">شرامانت</option>
+<option value="سمنام">سمنام</option>
+<option value="كيلة">كيلة</option>
+<option value="العثور">العثور</option>
+<option value="مدينتي">مدينتي</option>
+<option value="الشروق">الشروق</option>
+<option value="دار السلام">دار السلام</option>
+<option value="رمضان">رمضان</option>
+<option value="العياط">العياط</option>
+<option value="الصف">الصف</option>
+<option value="أطفيح">أطفيح</option>
+<option value="هليوبليس الجديدة">هليوبليس الجديدة</option>
+<option value="المستقبل">المستقبل</option>
+<option value="الإسكندرية">الإسكندرية</option>
+<option value="الإسماعيلية">الإسماعيلية</option>
+<option value="السويس">السويس</option>
+<option value="بورسعيد">بورسعيد</option>
+<option value="الدقهلية">الدقهلية</option>
+<option value="ملوية">ملوية</option>
+<option value="الغربية">الغربية</option>
+<option value="الشرقية">الشرقية</option>
+<option value="دمياط">دمياط</option>
+<option value="كفر الشيخ">كفر الشيخ</option>
+<option value="البحيرة">البحيرة</option>
+<option value="المنوفية">المنوفية</option>
+<option value="الفيوم">الفيوم</option>
+<option value="بني سويف">بني سويف</option>
+<option value="أسيوط">أسيوط</option>
+<option value="سوهاج">سوهاج</option>
+<option value="قنا">قنا</option>
+<option value="الأقصر">الأقصر</option>
+<option value="أسوان">أسوان</option>
+<option value="المنيا">المنيا</option>
+<option value="مرسى مطروح">مرسى مطروح</option>
+<option value="الغردقة">الغردقة</option>
+<option value="الساحل الشمالي">الساحل الشمالي</option>
+<option value="العالمين">العالمين</option>
+<option value="سيدي عبدالرحمن">سيدي عبدالرحمن</option>
+<option value="مدينة الحمام">مدينة الحمام</option>
+<option value="شرم الشيخ">شرم الشيخ</option>
+<option value="سفاجا">سفاجا</option>
+<option value="مصر">مصر</option>
+<option value="رأس غارب">رأس غارب</option>
+<option value="مرسى علم">مرسى علم</option>
+<option value="خليج مكادي">خليج مكادي</option>
+<option value="دهب">دهب</option>
+<option value="الطور">الطور</option>
+<option value="جنوب سيناء">جنوب سيناء</option>
+
+                </select>
+            </div>
+
+            <div class="input-group">
+                <textarea id="address" rows="4" placeholder="address"></textarea>
+            </div>
+
+            <div class="order-summary">
+                <h2>Order details</h2>
+                <p>Product price : <span id="total-before-discount">0.00</span> EGP</p>
+                <p>shipping : <span id="shipping-cost">0.00</span> EGP</p>
+                <p>discount : <span id="discount-value">0.00</span> EGP</p>
+                <p><strong>Total order : <span id="final-total">0.00</span> EGP</strong></p>
+            </div>
+
+            <div class="payment-options">
+                <label>payment</label>
+                <label>
+                    <input type="radio" name="payment" value="Etisalat-Cash"> Etisalat Cash
+                </label>
+                <label>
+                    <input type="radio" name="payment" value="Instapay"> Instapay
+                </label>
+                <label>
+                    <input type="radio" name="payment" value="Cash-On-Delivery"> Cash On Delivery
+                </label>
+            </div>
+            <p id="error-message" class="error-message"></p>
+
+            <button onclick="completeOrder()">End order</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let checkoutData = JSON.parse(localStorage.getItem("checkoutData")) || {};
+            let checkoutItems = checkoutData.items || [];
+            let checkoutContainer = document.getElementById("checkout-items");
+
+          
+            checkoutContainer.innerHTML = "";
+            if (checkoutItems.length === 0) {
+                checkoutContainer.innerHTML = "<p>No products found</p>";
+            } else {
+                checkoutItems.forEach(item => {
+                    let productDiv = document.createElement("div");
+                    productDiv.className = "product-details";
+                    productDiv.innerHTML = `
+                        <img src="${item.image}" alt="${item.name}" width="80">
+                        <div class="product-info">
+                            <h3>${item.name}</h3>
+                            <p>price: ${item.price} EGP</p>
+                            <p>Size: ${item.size}</p>
+                            <p>Quantity: ${item.quantity}</p>
+                        </div>
+                    `;
+                    checkoutContainer.appendChild(productDiv);
+                });
+            }
+
+            // تعبئة البيانات المالية
+            document.getElementById('total-before-discount').innerText = checkoutData.totalBeforeDiscount || "0.00";
+            document.getElementById('shipping-cost').innerText = checkoutData.shippingCost || "0.00";
+            document.getElementById('discount-value').innerText = checkoutData.discountValue || "0.00";
+            document.getElementById('final-total').innerText = checkoutData.finalTotal || "0.00";
+            document.getElementById('governorate').value = checkoutData.governorate || "";
+        });
+
+        function completeOrder() {
+    let name = document.getElementById('name').value.trim();
+    let email = document.getElementById('email').value.trim();
+    let phone = document.getElementById('phone').value.trim();
+    let altPhone = document.getElementById('alt-phone').value.trim();
+    let governorate = document.getElementById('governorate').value;
+    let address = document.getElementById('address').value.trim();
+
+    let totalBeforeDiscount = document.getElementById('total-before-discount').innerText;
+    let shippingCost = document.getElementById('shipping-cost').innerText;
+    let discountValue = document.getElementById('discount-value').innerText;
+    let finalTotal = document.getElementById('final-total').innerText;
+    let paymentMethod = document.querySelector('input[name="payment"]:checked')?.value || "Not selected";
+
+    let checkoutItems = JSON.parse(localStorage.getItem("checkoutItems")) || [];
+
+    if (!name || !email || !phone || !address) {
+        alert("Please fill in all required fields.");
+            return;
+        }
+
+    let orderDetails = checkoutItems.map(item => `Product Name: ${item.name}, amount: ${item.quantity}`).join("\n");
+
+    let templateParams = {
+        user_name: name,
+        user_email: email,
+        user_phone: phone,
+        user_alt_phone: altPhone,
+        user_governorate: governorate,
+        user_address: address,
+        order_details: orderDetails,
+        total_before_discount: totalBeforeDiscount,
+        shipping_cost: shippingCost,
+        discount_value: discountValue,
+        final_total: finalTotal,
+        payment_method: paymentMethod
+    };
+
+    emailjs.send("service_d6kjesk", "template_4adtl9t", templateParams, "TORUhwPNsi5IrClRF")
+        .then(response => {
+            
+
+         
+            localStorage.removeItem("checkoutItems");
+            localStorage.removeItem("cartItems");
+
+        
+            let queryParams = new URLSearchParams(templateParams).toString();
+            window.location.href = `to.html?${queryParams}`;
+
+        }, error => {
+            alert("An error occurred while submitting your request, please try again.");
+        });
+}
+    </script>
+</body>
+</html>

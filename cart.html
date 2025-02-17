@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <style>
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F8E7F6;
+            color: #4B164C;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+        }
+
+        .cart-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 20px;
+        }
+
+        h1 {
+            font-size: 28px;
+            color: #4B164C;
+            text-align: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #4B164C;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            background-color: #DD88CF;
+        }
+
+        
+        .left-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .right-section {
+            flex: 2;
+        }
+
+        .payment-section, .order-summary {
+            background-color: #F8E7F6;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #4B164C;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #DD88CF;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #4B164C;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #DD88CF;
+        }
+
+        .discount-message {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .discount-message.success {
+            color: green;
+        }
+
+        .discount-message.error {
+            color: red;
+        }
+
+        .order-summary p, .payment-section p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        
+        .product-details {
+            background-color: #F8E7F6;
+            border-radius: 10px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .product-details img {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-info h3 {
+            margin: 0 0 10px;
+            font-size: 20px;
+            color: #4B164C;
+        }
+
+        .product-info p {
+            margin: 5px 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        /* زر حذف المنتج */
+        .delete-product {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: transparent;
+            color: #ff4d4d;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .delete-product:hover {
+            color: #ff1a1a;
+        }
+
+        /* رسالة العربة الفارغة */
+        .empty-cart {
+            text-align: center;
+            padding: 20px;
+            background-color: #F8E7F6;
+            border-radius: 10px;
+        }
+
+        .empty-cart p {
+            font-size: 18px;
+            color: #4B164C;
+        }
+
+        .empty-cart button {
+            margin-top: 10px;
+        }
+
+        /* تكبير حجم السعر الإجمالي وجعله بولد */
+        .order-summary p span {
+            font-size: 22px;
+            font-weight: bold;
+            color: #4B164C;
+        }
+
+        /* تصميم السلايد */
+        .shipping-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        #shipping-slider {
+            width: 100%;
+            padding: 10px;
+            font-size: 18px;
+            border-radius: 5px;
+            border: 2px solid #4B164C;
+            background: white;
+            color: #4B164C;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        #shipping-cost {
+            font-size: 20px;
+            font-weight: bold;
+            color: #DD88CF;
+            margin-top: 10px;
+        }
+
+        /* تصميم عداد الكمية */
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+            justify-content: center;
+            background: #F8E7F6;
+            border-radius: 10px;
+            padding: 10px;
+            width: fit-content;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .quantity-control button {
+            width: 30px;
+            height: 30px;
+            background: #4B164C;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quantity-control button:hover {
+            background: #DD88CF;
+        }
+
+        .quantity-control input {
+            width: 40px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: #4B164C;
+            border: none;
+            background: none;
+            direction: ltr;
+            font-family: 'Arial', sans-serif;
+            pointer-events: none;
+        }
+
+        /* زر إنهاء الطلبية */
+        .checkout-button {
+            width: 100%;
+            padding: 15px;
+            background-color: #4B164C;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .checkout-button:hover {
+            background-color: #DD88CF;
+        }
+
+        /* Media Queries للهواتف المحمولة */
+        @media (max-width: 768px) {
+            .cart-container {
+                flex-direction: column;
+            }
+
+            .left-section, .right-section {
+                width: 100%;
+            }
+
+            .product-details {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .product-details img {
+                width: 80%;
+                height: auto;
+                margin-bottom: 10px;
+            }
+
+            .quantity-control {
+                justify-content: center;
+            }
+
+            .back-button {
+                top: 10px;
+                left: 10px;
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+        }
+    </style>
+
+
+<meta name="keywords" content="">
+      <meta name="description" content="">
+      <meta name="author" content="">
+      <!-- owl carousel style -->
+      <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.0.0-beta.2.4/assets/owl.carousel.min.css" />
+      <!-- bootstrap css -->
+      <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+      <!-- style css -->
+      <link rel="stylesheet" type="text/css" href="css/style.css">
+      <!-- Responsive-->
+      
+      <!-- fevicon -->
+      <link rel="icon" href="images/fevicon.png" type="image/gif" />
+      <!-- Scrollbar Custom CSS -->
+      <link rel="stylesheet" href="css/jquery.mCustomScrollbar.min.css">
+      <!-- Tweaks for older IEs-->
+      <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+      <!-- owl stylesheets --> 
+      <link rel="stylesheet" href="css/owl.carousel.min.css">
+      <link rel="stylesheet" href="css/owl.theme.default.min.css">
+      
+    </head>
+    <div class="header_section">
+    <div class="container">
+     <nav class="navbar navbar-dark bg-dark">
+        <a class="logo" href="index.html"><img src="images/logo.png"></a>
+        <div class="search_section">
+           <ul>
+              
+              <li>
+                <a href="cart.html">
+                    <img src="images/shopping-bag.png">
+                    <span id="cart-count"></span>
+                </a>
+            </li>
+              <li><a href="#"><img src="images/search-icon.png"></a></li>
+           </ul>
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarsExample01">
+           <ul class="navbar-nav mr-auto">
+              <li class="nav-item active">
+                 <a class="nav-link" href="index.html">Home</a>
+              </li>
+              <li class="nav-item">
+                 <a class="nav-link" href="category.html">Category</a>
+              </li>
+              <li class="nav-item">
+                 <a class="nav-link" href="products.html">Products</a>
+              </li>
+              <li class="nav-item">
+                 <a class="nav-link" href="clients.html">Client</a>
+              </li>
+              <li class="nav-item">
+                 <a class="nav-link" href="contact.html">Contact Us</a>
+              </li>
+           </ul>
+        </div>
+     </nav>
+    
+    </div>
+    <body>
+
+  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="cart-container">
+      
+        <div class="right-section">
+            <h1>CART</h1>
+
+           
+            <div id="cart-items">
+               
+            </div>
+
+           
+            <div class="empty-cart" id="empty-cart-message">
+                <p>There are no products in the shopping cart. Please add products.</p>
+                <button onclick="goToShopping()">Go To Shopping</button>
+            </div>
+        </div>
+
+        
+        <div class="left-section">
+           
+            <div class="payment-section">
+                <h2>Discount</h2>
+                <p>Discount code</p>
+                <input type="text" id="discount-code" placeholder="add discount code">
+                <button onclick="applyDiscount()">apply</button>
+                <p id="discount-message" class="discount-message"></p>
+            </div>
+
+            <!-- ملخص الطلبية -->
+            <div class="order-summary">
+                <div class="shipping-container">
+                    <h2>select shipping :</h2>
+                    <select id="shipping-slider" onchange="updateShippingCost()">
+                        <option value="القاهرة" data-cost="55">القاهرة</option>
+    <option value="الجيزة" data-cost="55">الجيزة</option>
+    <option value="الإسكندرية" data-cost="70">الإسكندرية</option>
+    <option value="الإسماعيلية" data-cost="70">الإسماعيلية</option>
+    <option value="بورسعيد" data-cost="70">بورسعيد</option>
+    <option value="الدقهلية" data-cost="75">الدقهلية</option>
+    <option value="الغربية" data-cost="75">الغربية</option>
+    <option value="القليوبية" data-cost="75">القليوبية</option>
+    <option value="الشرقية" data-cost="75">الشرقية</option>
+    <option value="دمياط" data-cost="75">دمياط</option>
+    <option value="كفر الشيخ" data-cost="75">كفر الشيخ</option>
+    <option value="البحيرة" data-cost="75">البحيرة</option>
+    <option value="المنوفية" data-cost="75">المنوفية</option>
+    <option value="الفيوم" data-cost="85">الفيوم</option>
+    <option value="بني سويف" data-cost="85">بني سويف</option>
+    <option value="المنيا" data-cost="85">المنيا</option>
+    <option value="أسيوط" data-cost="85">أسيوط</option>
+    <option value="سوهاج" data-cost="85">سوهاج</option>
+    <option value="قنا" data-cost="85">قنا</option>
+    <option value="الأقصر" data-cost="85">الأقصر</option>
+    <option value="أسوان" data-cost="85">أسوان</option>
+    <option value="مرسى مطروح" data-cost="95">مرسى مطروح</option>
+    <option value="العلمين" data-cost="95">العلمين</option>
+    <option value="الساحل الشمالي" data-cost="95">الساحل الشمالي</option>
+    <option value="سيدي عبد الرحمن" data-cost="95">سيدي عبد الرحمن</option>
+    <option value="مدينة الحمام" data-cost="95">مدينة الحمام</option>
+    <option value="سهل حشيش" data-cost="110">سهل حشيش</option>
+    <option value="سفاجا" data-cost="115">سفاجا</option>
+    <option value="مرسى علم" data-cost="115">مرسى علم</option>
+    <option value="رأس غارب" data-cost="115">رأس غارب</option>
+    <option value="خليج مكادي" data-cost="115">خليج مكادي</option>
+    <option value="دهب" data-cost="115">دهب</option>
+    <option value="الطور جنوب سيناء" data-cost="115">الطور جنوب سيناء</option>
+                    </select>
+                    <p>سعر الشحن: <span id="shipping-cost">30</span> جنيه</p>
+                </div>
+                
+                
+                
+                <div class="order-summary">
+                    <h2>Order details</h2>
+                    <p>Product price: <span id="order-total">0.00</span> جنيه</p>
+                    <p>shipping: <span id="shipping-total">30</span> جنيه</p>
+                    <p>discount: <span id="discount-total">0.00</span> جنيه</p>
+                    <p>Total order: <span id="final-total">0.00</span> جنيه</p>
+                    <button class="checkout-button" onclick="redirectToCheckout()">Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+
+    <script>
+
+        
+
+function redirectToCheckout() {
+    let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    let shippingCost = document.getElementById('shipping-cost').innerText;
+    let discountValue = document.getElementById('discount-total').innerText;
+    let totalBeforeDiscount = document.getElementById('order-total').innerText;
+    let finalTotal = document.getElementById('final-total').innerText;
+    let selectedGovernorate = document.getElementById('shipping-slider').value;
+    let discountCode = document.getElementById('discount-code').value;
+
+    let checkoutData = {
+        items: cartItems,
+        shippingCost: shippingCost,
+        discountValue: discountValue,
+        totalBeforeDiscount: totalBeforeDiscount,
+        finalTotal: finalTotal,
+        governorate: selectedGovernorate,
+        discountCode: discountCode
+    };
+
+    localStorage.setItem("checkoutData", JSON.stringify(checkoutData));
+    window.location.href = "checkout.html";
+}
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  
+    updateCartCount();
+
+    function updateCartCount() {
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        document.getElementById("cart-count").innerText = cart.length;
+    }
+
+
+    function addToCart(product) {
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        cart.push(product);
+        localStorage.setItem("cart", JSON.stringify(cart));
+        updateCartCount(); 
+    }
+
+    
+    let addToCartButtons = document.querySelectorAll(".add-to-cart");
+    addToCartButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            let product = {
+                id: this.dataset.id,
+                name: this.dataset.name,
+                price: this.dataset.price
+            };
+            addToCart(product);
+        });
+    });
+});
+
+
+
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+            const cartItemsContainer = document.getElementById('cart-items');
+            const emptyCartMessage = document.getElementById('empty-cart-message');
+            const orderTotal = document.getElementById('order-total');
+            const finalTotal = document.getElementById('final-total');
+            const shippingTotal = document.getElementById('shipping-total');
+            const discountTotal = document.getElementById('discount-total');
+            const shippingCost = document.getElementById('shipping-cost');
+            const shippingDropdown = document.getElementById('shipping-slider');
+
+            function displayCartItems() {
+    cartItemsContainer.innerHTML = '';
+
+    if (cartItems.length === 0) {
+        emptyCartMessage.style.display = 'block';
+        return;
+    } else {
+        emptyCartMessage.style.display = 'none';
+    }
+
+    cartItems.forEach((item, index) => {
+        const productDiv = document.createElement('div');
+        productDiv.className = 'product-details';
+        productDiv.innerHTML = `
+            <button class="delete-product" onclick="removeProduct(${index})"><i class="fas fa-trash"></i></button>
+            <img src="${item.image}" alt="${item.name}">
+            <div class="product-info">
+                <h3>
+                    <a href="product.html?id=${encodeURIComponent(item.name)}" style="text-decoration: none; color: #4B164C;">
+                        ${item.name}
+                    </a>
+                </h3>
+                <p> price: ${item.price} EGP</p>
+                <p> size: ${item.size}</p>
+                <div class="quantity-control">
+                    <button onclick="decreaseQuantity(${index})">-</button>
+                    <input type="text" id="quantity-${index}" value="${item.quantity}" readonly>
+                    <button onclick="increaseQuantity(${index})">+</button>
+                </div>
+                <p> total: <span id="total-${index}">${(item.price * item.quantity).toFixed(2)}</span> EGP</p>
+            </div>
+        `;
+        cartItemsContainer.appendChild(productDiv);
+    });
+
+    updateTotal();
+}
+
+
+            function updateTotal() {
+                const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                orderTotal.innerText = total.toFixed(2);
+                updateFinalTotal();
+            }
+
+            function updateFinalTotal() {
+                const total = parseFloat(orderTotal.innerText);
+                const shipping = parseFloat(shippingCost.innerText);
+                const discount = parseFloat(discountTotal.innerText);
+                finalTotal.innerText = (total + shipping - discount).toFixed(2);
+            }
+
+            function updateShippingCost() {
+                const selectedOption = shippingDropdown.options[shippingDropdown.selectedIndex];
+                const cost = parseFloat(selectedOption.getAttribute("data-cost"));
+                shippingCost.innerText = cost.toFixed(2);
+                shippingTotal.innerText = cost.toFixed(2);
+                updateFinalTotal();
+            }
+
+            function removeProduct(index) {
+                cartItems.splice(index, 1);
+                localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                displayCartItems();
+            }
+
+            function increaseQuantity(index) {
+                cartItems[index].quantity++;
+                localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                displayCartItems();
+            }
+
+            function decreaseQuantity(index) {
+                if (cartItems[index].quantity > 1) {
+                    cartItems[index].quantity--;
+                    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+                    displayCartItems();
+                }
+            }
+
+            function applyDiscount() {
+                const discountCode = document.getElementById('discount-code').value;
+                const discountMessage = document.getElementById('discount-message');
+                let total = parseFloat(orderTotal.innerText);
+
+                if (discountCode === "خصم10") {
+                    const discount = total * 0.1;
+
+                    discountTotal.innerText = discount.toFixed(2);
+                    discountMessage.innerText = "your discount code is applied";
+                    discountMessage.className = "discount-message success";
+                } else {
+                    discountTotal.innerText = "0.00";
+                    discountMessage.innerText = "your discount code is invalid";
+                    discountMessage.className = "discount-message error";
+                }
+                updateFinalTotal();
+            }
+
+            function goToShopping() {
+                window.location.href = "products.html";
+            }
+
+            window.removeProduct = removeProduct;
+            window.applyDiscount = applyDiscount;
+            window.goToShopping = goToShopping;
+            window.updateShippingCost = updateShippingCost;
+            window.increaseQuantity = increaseQuantity;
+            window.decreaseQuantity = decreaseQuantity;
+
+            displayCartItems();
+        });
+
+        
+    
+
+
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+        }
+        .container {
+            display: flex;
+            max-width: 1000px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .product-images {
+            flex: 1;
+            padding: 20px;
+        }
+        .product-images img {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .thumbnails {
+            display: flex;
+            margin-top: 10px;
+        }
+        .thumbnails img {
+            width: 80px;
+            margin-right: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .product-info {
+            flex: 1;
+            padding: 20px;
+        }
+        .product-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .price {
+            font-size: 20px;
+            color: #e60000;
+            margin: 10px 0;
+        }
+        .sizes {
+            margin: 20px 0;
+        }
+        .sizes select {
+            padding: 8px;
+            font-size: 16px;
+        }
+        .add-to-cart {
+            background: #28a745;
+            color: white;
+            padding: 10px;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .add-to-cart:hover {
+            background: #218838;
+        }
+        .description {
+            margin-top: 30px;
+            font-size: 16px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="product-images">
+        <img id="main-image" src="images/product1.jpg" alt="Product Image">
+        <div class="thumbnails">
+            <img src="images/product1.jpg" alt="Thumbnail" onclick="changeImage('images/product1.jpg')">
+            <img src="images/product2.jpg" alt="Thumbnail" onclick="changeImage('images/product2.jpg')">
+            <img src="images/product3.jpg" alt="Thumbnail" onclick="changeImage('images/product3.jpg')">
+        </div>
+    </div>
+
+    <div class="product-info">
+        <h1 class="product-title">اسم المنتج</h1>
+        <p class="price">$99.99</p>
+        
+        <div class="sizes">
+            <label for="size">المقاس:</label>
+            <select id="size">
+                <option>S</option>
+                <option>M</option>
+                <option>L</option>
+                <option>XL</option>
+            </select>
+        </div>
+        
+        <button class="add-to-cart">إضافة إلى السلة</button>
+
+        <p class="description">
+            هذا هو وصف المنتج، يحتوي على كافة التفاصيل الخاصة بالمنتج، مثل المواد المستخدمة، طريقة الاستخدام، وأي معلومات أخرى مفيدة للمستخدم.
+        </p>
+    </div>
+</div>
+
+<script>
+    function changeImage(imageSrc) {
+        document.getElementById("main-image").src = imageSrc;
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل الطلب</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F8E7F6;
+            color: #4B164C;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+        }
+
+        .order-details-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: right;
+        }
+
+        th {
+            background-color: #4B164C;
+            color: white;
+            font-size: 18px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .total-row {
+            font-weight: bold;
+            color: #DD88CF;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F8E7F6;
+            color: #4B164C;
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+        }
+
+        .order-details-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: right;
+        }
+
+        th {
+            background-color: #4B164C;
+            color: white;
+            font-size: 18px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .total-row {
+            font-weight: bold;
+            color: #DD88CF;
+        }
+
+        /* تصميم الزر الكبير */
+        .big-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(90deg, #4B164C, #DD88CF);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            margin-top: 20px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .big-button:hover {
+            transform: scale(1.05);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="order-details-container">
+        <h1 style="text-align: center; color: #4B164C;">تفاصيل الطلب</h1>
+        <table>
+            <tr>
+                <th colspan="2">تفاصيل العميل</th>
+            </tr>
+            <tr>
+                <td><strong>اسم العميل:</strong></td>
+                <td id="user-name">{{user_name}}</td>
+            </tr>
+            <tr>
+                <td><strong>البريد الإلكتروني:</strong></td>
+                <td id="user-email">{{user_email}}</td>
+            </tr>
+            <tr>
+                <td><strong>رقم الهاتف:</strong></td>
+                <td id="user-phone">{{user_phone}}</td>
+            </tr>
+            <tr>
+                <td><strong>رقم الهاتف الاحتياطي:</strong></td>
+                <td id="user-alt-phone">{{user_alt_phone}}</td>
+            </tr>
+            <tr>
+                <td><strong>المحافظة:</strong></td>
+                <td id="user-governorate">{{user_governorate}}</td>
+            </tr>
+            <tr>
+                <td><strong>العنوان:</strong></td>
+                <td id="user-address">{{user_address}}</td>
+            </tr>
+            <tr>
+                <th colspan="2">تفاصيل المنتجات</th>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <pre id="order-details" style="white-space: pre-wrap; font-size: 16px; color: #4B164C;">{{order_details}}</pre>
+                </td>
+            </tr>
+            <tr>
+                <th colspan="2">ملخص الطلبية</th>
+            </tr>
+            <tr>
+                <td><strong>مجموع الطلبية (قبل الشحن والخصم):</strong></td>
+                <td id="total-before-discount">{{total_before_discount}} جنيه</td>
+            </tr>
+            <tr>
+                <td><strong>سعر الشحن:</strong></td>
+                <td id="shipping-cost">{{shipping_cost}} جنيه</td>
+            </tr>
+            <tr>
+                <td><strong>الخصم:</strong></td>
+                <td id="discount-value">{{discount_value}} جنيه</td>
+            </tr>
+            <tr class="total-row">
+                <td><strong>إجمالي الطلبية (بعد الشحن والخصم):</strong></td>
+                <td id="final-total">{{final_total}} جنيه</td>
+            </tr>
+            <tr>
+                <td><strong>طريقة الدفع:</strong></td>
+                <td id="payment-method">{{payment_method}}</td>
+            </tr>
+        </table>
+
+        <a href="index.html" class="big-button">العودة إلى الصفحة الرئيسية</a>
+    </div>
+
+
+    </div>
+
+    <script>
+        // استخراج البيانات من الـ URL
+        const urlParams = new URLSearchParams(window.location.search);
+    
+        // تعبئة البيانات في الجدول
+        document.getElementById('user-name').innerText = urlParams.get('user_name');
+        document.getElementById('user-email').innerText = urlParams.get('user_email');
+        document.getElementById('user-phone').innerText = urlParams.get('user_phone');
+        document.getElementById('user-alt-phone').innerText = urlParams.get('user_alt_phone');
+        document.getElementById('user-governorate').innerText = urlParams.get('user_governorate');
+        document.getElementById('user-address').innerText = urlParams.get('user_address');
+        document.getElementById('order-details').innerText = urlParams.get('order_details');
+        document.getElementById('total-before-discount').innerText = urlParams.get('total_before_discount') + " جنيه";
+        document.getElementById('shipping-cost').innerText = urlParams.get('shipping_cost') + " جنيه";
+        document.getElementById('discount-value').innerText = urlParams.get('discount_value') + " جنيه";
+        document.getElementById('final-total').innerText = urlParams.get('final_total') + " جنيه";
+        document.getElementById('payment-method').innerText = urlParams.get('payment_method');
+    </script>
+</body>
+</html>
